@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container py-4">
+    <header class="py-4 mb-4 text-center">
+      <h1 class="display-4 fw-bold"><%= title %></h1>
+      <p class="lead">대한민국 제21대 대통령선거 등록 현황 정보</p>
+    </header>
+
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <form action="/" method="GET" class="row g-3">
+          <div class="col-md-5">
+            <label for="sgId" class="form-label">선거 ID</label>
+            <input type="text" class="form-control" id="sgId" name="sgId" value="<%= query.sgId || '20250603' %>" placeholder="예: 20250603">
+            <div class="form-text">선거 ID는 YYYYMMDD 형식입니다.</div>
+          </div>
+          <div class="col-md-5">
+            <label for="sgTypecode" class="form-label">선거 유형</label>
+            <select class="form-select" id="sgTypecode" name="sgTypecode">
+              <option value="1" <%= (query.sgTypecode === '1' || !query.sgTypecode) ? 'selected' : '' %>>대통령선거</option>
+              <option value="2" <%= query.sgTypecode === '2' ? 'selected' : '' %>>국회의원선거</option>
+              <option value="3" <%= query.sgTypecode === '3' ? 'selected' : '' %>>지방선거</option>
+            </select>
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">조회하기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">오류 발생!</h4>
+        <p><%= error %></p>
+        <hr>
+        <p class="mb-0">API 서버 상태를 확인하거나 나중에 다시 시도해주세요.</p>
+      </div>
+    <% } else if (data && data.length > 0) { %>
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">선거 등록 현황 (<%= data.length %>건)</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>후보자명</th>
+                  <th>정당명</th>
+                  <th>선거구명</th>
+                  <th>등록상태</th>
+                  <th>생년월일</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% data.forEach(item => { %>
+                  <tr>
+                    <td><%= item.name || '정보 없음' %></td>
+                    <td><%= item.jdName || '정보 없음' %></td>
+                    <td><%= item.sdName || '정보 없음' %></td>
+                    <td><span class="badge <%= item.status === '등록' ? 'bg-success' : 'bg-secondary' %>"><%= item.status || '정보 없음' %></span></td>
+                    <td><%= item.birthday || '정보 없음' %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">데이터가 없습니다</h4>
+        <p>해당 조건에 맞는 선거 등록 정보가 없습니다.</p>
+        <hr>
+        <p class="mb-0">다른 선거 ID나 선거 유형을 선택하여 다시 시도해보세요.</p>
+      </div>
+    <% } %>
+
+    <footer class="mt-5 pt-4 text-center text-muted border-top">
+      <p>© 2025 대한민국 선거관리위원회 | 제21대 대통령선거 정보 시스템</p>
+      <p class="small">이 웹사이트는 <a href="https://www.data.go.kr/" target="_blank">공공데이터포털</a>에서 제공하는 API를 활용합니다.</p>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

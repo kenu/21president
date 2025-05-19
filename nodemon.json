@@ -1,0 +1,17 @@
+{
+  "watch": [
+    "app.js",
+    "views/",
+    "public/",
+    ".env"
+  ],
+  "ext": "js,json,ejs,css",
+  "ignore": [
+    "node_modules/",
+    ".git/"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "verbose": true
+}
