@@ -13,6 +13,13 @@ const PORT = process.env.PORT || 8000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Add CORS headers
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -27,17 +34,25 @@ app.get('/', async (req, res) => {
     // Default parameters for the API
     const params = {
       ServiceKey: SERVICE_KEY,
-      sgId: req.query.sgId || '20250603',
+      sgId: req.query.sgId || '20220309',
       sgTypecode: req.query.sgTypecode || '1',
       resultType: 'json'
     };
     
-    // 임시 테스트용 하드코딩된 URL 사용
-    const apiUrl = 'https://apis.data.go.kr/9760000/PofelcddInfoInqireService/getPofelcddRegistSttusInfoInqire?ServiceKey=4MjolsmxrlqEv3hEBeSleWCFNguNi2rJoQBKD9xtry0x4uqqnpUcOJinPQt9Q0ASv%2Funl57K%2BVb5QjHvjDLAuQ%3D%3D&sgId=20250603&sgTypecode=1&resultType=json';
+    // params를 사용하여 URL 구성
+    const apiUrl = `${API_URL}?ServiceKey=${params.ServiceKey}&sgId=${params.sgId}&sgTypecode=${params.sgTypecode}&resultType=${params.resultType}`;
     console.log('API 요청 URL:', apiUrl);
     
     // API에서 데이터 가져오기
-    const response = await axios.get(apiUrl);
+    console.log('서버에서 API 요청 시작...');
+    const response = await axios.get(apiUrl, {
+      timeout: 10000, // 10초 타임아웃 설정
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+      }
+    });
+    console.log('API 요청 성공!');
     
     // API 응답 로깅
     console.log('API 응답:', JSON.stringify(response.data, null, 2));

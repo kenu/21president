@@ -17,22 +17,22 @@
 
     <div class="card mb-4 shadow-sm">
       <div class="card-body">
-        <form action="/" method="GET" class="row g-3">
-          <div class="col-md-5">
-            <label for="sgId" class="form-label">선거 ID</label>
-            <input type="text" class="form-control" id="sgId" name="sgId" value="<%= query.sgId || '20250603' %>" placeholder="예: 20250603">
-            <div class="form-text">선거 ID는 YYYYMMDD 형식입니다.</div>
+        <form action="/" method="GET" class="row g-3" id="electionForm">
+          <div class="col-md-6">
+            <label for="sgId" class="form-label">대선 선택</label>
+            <select class="form-select" id="sgId" name="sgId" onchange="document.getElementById('electionForm').submit();">
+              <option value="20250603" <%= query.sgId === '20250603' ? 'selected' : '' %>>제21대 대통령선거 (2025.06.03)</option>
+              <option value="20220309" <%= (query.sgId === '20220309' || !query.sgId) ? 'selected' : '' %>>제20대 대통령선거 (2022.03.09)</option>
+              <option value="20170509" <%= query.sgId === '20170509' ? 'selected' : '' %>>제19대 대통령선거 (2017.05.09)</option>
+            </select>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-6">
             <label for="sgTypecode" class="form-label">선거 유형</label>
-            <select class="form-select" id="sgTypecode" name="sgTypecode">
+            <select class="form-select" id="sgTypecode" name="sgTypecode" onchange="document.getElementById('electionForm').submit();">
               <option value="1" <%= (query.sgTypecode === '1' || !query.sgTypecode) ? 'selected' : '' %>>대통령선거</option>
               <option value="2" <%= query.sgTypecode === '2' ? 'selected' : '' %>>국회의원선거</option>
               <option value="3" <%= query.sgTypecode === '3' ? 'selected' : '' %>>지방선거</option>
             </select>
-          </div>
-          <div class="col-md-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">조회하기</button>
           </div>
         </form>
       </div>
