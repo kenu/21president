@@ -23,6 +23,10 @@ app.use((req, res, next) => {
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Setup body parser for form data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // API URL
 const API_URL = 'https://apis.data.go.kr/9760000/PofelcddInfoInqireService/getPofelcddRegistSttusInfoInqire';
 // 공공데이터포털에서 발급받은 서비스 키
@@ -31,11 +35,11 @@ const SERVICE_KEY = '4MjolsmxrlqEv3hEBeSleWCFNguNi2rJoQBKD9xtry0x4uqqnpUcOJinPQt
 // Routes
 app.get('/', async (req, res) => {
   try {
-    // Default parameters for the API
+    // Fixed parameters for the API - only showing 20250603 election data
     const params = {
       ServiceKey: SERVICE_KEY,
-      sgId: req.query.sgId || '20220309',
-      sgTypecode: req.query.sgTypecode || '1',
+      sgId: '20250603',
+      sgTypecode: '1',
       resultType: 'json'
     };
     
@@ -74,8 +78,7 @@ app.get('/', async (req, res) => {
     res.render('index', { 
       title: '제21대 대통령선거 정보', 
       data: electionData,
-      error: null,
-      query: req.query
+      error: null
     });
   } catch (error) {
     console.error('Error fetching data:', error.message);
@@ -84,8 +87,70 @@ app.get('/', async (req, res) => {
     res.render('index', { 
       title: '제21대 대통령선거 정보', 
       data: [],
-      error: '데이터를 불러오는 중 오류가 발생했습니다.',
-      query: req.query
+      error: '데이터를 불러오는 중 오류가 발생했습니다.'
+    });
+  }
+});
+
+// Detail page route
+app.get('/candidate/:id', async (req, res) => {
+  try {
+    const candidateId = req.params.id;
+    
+    // Fixed parameters for the API - only showing 20250603 election data
+    const params = {
+      ServiceKey: SERVICE_KEY,
+      sgId: '20250603',
+      sgTypecode: '1',
+      resultType: 'json'
+    };
+    
+    // API에서 데이터 가져오기
+    const apiUrl = `${API_URL}?ServiceKey=${params.ServiceKey}&sgId=${params.sgId}&sgTypecode=${params.sgTypecode}&resultType=${params.resultType}`;
+    const response = await axios.get(apiUrl, {
+      timeout: 10000,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+      }
+    });
+    
+    // API 응답에서 데이터 추출
+    let electionData = [];
+    if (response.data && response.data.response && 
+        response.data.response.body && 
+        response.data.response.body.items) {
+      if (response.data.response.body.items.item) {
+        electionData = Array.isArray(response.data.response.body.items.item) 
+          ? response.data.response.body.items.item 
+          : [response.data.response.body.items.item];
+      }
+    }
+    
+    // Find the candidate with the matching ID
+    const candidate = electionData.find(item => item.name === candidateId);
+    
+    if (!candidate) {
+      return res.status(404).render('error', { 
+        title: '후보자 정보 없음', 
+        message: '요청하신 후보자 정보를 찾을 수 없습니다.',
+        error: { status: 404, stack: '' }
+      });
+    }
+    
+    // Render the detail page with the candidate data
+    res.render('detail', { 
+      title: `${candidate.name} 후보자 정보`, 
+      candidate: candidate
+    });
+  } catch (error) {
+    console.error('Error fetching candidate data:', error.message);
+    
+    // Render error page
+    res.status(500).render('error', { 
+      title: '오류 발생', 
+      message: '후보자 정보를 불러오는 중 오류가 발생했습니다.',
+      error: { status: 500, stack: process.env.NODE_ENV === 'development' ? error.stack : '' }
     });
   }
 });

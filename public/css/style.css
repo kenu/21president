@@ -44,6 +44,16 @@ h1 {
   vertical-align: middle;
 }
 
+/* 클릭 가능한 행 스타일 */
+.candidate-row {
+  transition: background-color 0.2s ease;
+}
+
+.candidate-row:hover {
+  background-color: #f0f7ff;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.2);
+}
+
 .badge {
   font-weight: 500;
   padding: 0.5em 0.8em;
@@ -51,6 +61,33 @@ h1 {
 
 footer {
   color: #6c757d;
+}
+
+/* 후보자 상세 페이지 스타일 */
+.candidate-image-container {
+  width: 250px;
+  height: 400px;
+  margin: 0 auto 1.5rem;
+  position: relative;
+  overflow: visible;
+}
+
+.candidate-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  border: 3px solid #0d6efd;
+}
+
+.candidate-image:hover {
+  transform: scale(1.03);
+}
+
+.candidate-image.default-img {
+  object-fit: contain;
+  padding: 1rem;
+  background-color: #e9f2ff;
 }
 
 /* 반응형 스타일 */
