@@ -97,6 +97,17 @@ app.get('/candidate/:id', async (req, res) => {
   try {
     const candidateId = req.params.id;
     
+    // Map candidate IDs to names
+    const candidateNameMap = {
+      '1': '이재명',
+      '2': '김문수',
+      '4': '이준석',
+      '5': '권영국',
+      '6': '구주와',
+      '7': '황교안',
+      '8': '송진호'
+    };
+    
     // Fixed parameters for the API - only showing 20250603 election data
     const params = {
       ServiceKey: SERVICE_KEY,
@@ -127,8 +138,9 @@ app.get('/candidate/:id', async (req, res) => {
       }
     }
     
-    // Find the candidate with the matching ID
-    const candidate = electionData.find(item => item.name === candidateId);
+    // Find the candidate with the matching name from ID
+    const candidateName = candidateNameMap[candidateId];
+    const candidate = electionData.find(item => item.name === candidateName);
     
     if (!candidate) {
       return res.status(404).render('error', { 

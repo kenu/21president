@@ -30,7 +30,21 @@
           <div class="col-md-4 mb-4 mb-md-0">
             <div class="text-center mb-3">
               <div class="candidate-image-container">
-                <img src="/images/candidates/<%= candidate.name %>.webp" 
+                <%
+                  // Map candidate names to image numbers
+                  let imageNumber = 0;
+                  switch(candidate.name) {
+                    case '구주와': imageNumber = 6; break;
+                    case '권영국': imageNumber = 5; break;
+                    case '김문수': imageNumber = 2; break;
+                    case '송진호': imageNumber = 8; break;
+                    case '이재명': imageNumber = 1; break;
+                    case '이준석': imageNumber = 4; break;
+                    case '황교안': imageNumber = 7; break;
+                    default: imageNumber = 0;
+                  }
+                %>
+                <img src="/images/candidates/<%= imageNumber %>.webp" 
                      alt="<%= candidate.name %> 후보자" 
                      class="candidate-image img-fluid rounded-3 shadow"
                      onerror="this.onerror=null; this.src='/images/candidates/default.svg'; this.classList.add('default-img')">

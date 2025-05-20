@@ -47,7 +47,19 @@
               </thead>
               <tbody>
                 <% data.forEach(item => { %>
-                  <tr class="candidate-row" onclick="window.location.href='/candidate/<%= item.name %>'" style="cursor: pointer;">
+                  <tr class="candidate-row" onclick="window.location.href='/candidate/<%= getCandidateId(item.name) %>'" style="cursor: pointer;">
+                  <% function getCandidateId(name) {
+                    switch(name) {
+                      case '구주와': return '6';
+                      case '권영국': return '5';
+                      case '김문수': return '2';
+                      case '송진호': return '8';
+                      case '이재명': return '1';
+                      case '이준석': return '4';
+                      case '황교안': return '7';
+                      default: return '0';
+                    }
+                  } %>
                     <td><%= item.name || '정보 없음' %></td>
                     <td><%= item.jdName || '정보 없음' %></td>
                     <td><%= item.sdName || '정보 없음' %></td>
