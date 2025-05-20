@@ -46,9 +46,8 @@
                 </tr>
               </thead>
               <tbody>
-                <% data.forEach(item => { %>
-                  <tr class="candidate-row" onclick="window.location.href='/candidate/<%= getCandidateId(item.name) %>'" style="cursor: pointer;">
-                  <% function getCandidateId(name) {
+                <% 
+                  function getCandidateId(name) {
                     switch(name) {
                       case '구주와': return '6';
                       case '권영국': return '5';
@@ -59,7 +58,10 @@
                       case '황교안': return '7';
                       default: return '0';
                     }
-                  } %>
+                  } 
+                %>
+                <% data.forEach(item => { %>
+                  <tr class="candidate-row" onclick="window.location.href='./candidate/<%= getCandidateId(item.name) %>'" style="cursor: pointer;">
                     <td><%= item.name || '정보 없음' %></td>
                     <td><%= item.jdName || '정보 없음' %></td>
                     <td><%= item.sdName || '정보 없음' %></td>
