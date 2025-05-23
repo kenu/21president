@@ -65,6 +65,28 @@
                   <td><%= candidate.jdName || '정보 없음' %></td>
                 </tr>
                 <tr>
+                  <th class="table-light">정당 홈페이지</th>
+                  <td>
+                    <% 
+                    let partyWebsite = '';
+                    switch(candidate.jdName) {
+                      case '더불어민주당': partyWebsite = 'https://theminjoo.kr'; break;
+                      case '국민의힘': partyWebsite = 'https://www.peoplepowerparty.kr'; break;
+                      case '정의당': partyWebsite = 'https://www.justice21.org'; break;
+                      case '기본소득당': partyWebsite = 'https://basicincomeparty.kr'; break;
+                      case '새로운물결': partyWebsite = 'https://www.nwp.kr'; break;
+                      case '무소속': partyWebsite = ''; break;
+                      default: partyWebsite = '';
+                    }
+                    %>
+                    <% if (partyWebsite) { %>
+                      <a href="<%= partyWebsite %>" target="_blank"><%= partyWebsite %></a>
+                    <% } else { %>
+                      <%= candidate.jdName === '무소속' ? '해당 없음' : '정보 없음' %>
+                    <% } %>
+                  </td>
+                </tr>
+                <tr>
                   <th class="table-light">선거구명</th>
                   <td><%= candidate.sdName || '정보 없음' %></td>
                 </tr>
